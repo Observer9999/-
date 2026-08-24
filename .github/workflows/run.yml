@@ -1,1 +1,59 @@
 
+name: Daily Data Agent
+
+on:
+  schedule:
+    - cron: '15 21 * * *'  # UTC 21:00 (北京时间 05:00)，保持不变
+  workflow_dispatch:
+
+# ========== 【新增 ①】允许 Action 写回仓库 ==========
+permissions:
+  contents: write
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        # ========== 【新增 ②】授权 push 权限 ==========
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      # ========== 【新增 ③】从 Secrets 生成配置文件（见下方说明）==========
+      # 如果仓库是公开的，取消下面注释：
+      # - name: Generate sites_config.json
+      #   run: echo '${{ secrets.SITES_CONFIG_JSON }}' > sites_config.json
+
+      - name: Run LangGraph Agent
+        env:
+          # 原有变量保留（向后兼容，不影响运行）
+          WEB_USER: ${{ secrets.WEB_USER }}
+          WEB_PASS: ${{ secrets.WEB_PASS }}
+          LOGIN_URL: ${{ secrets.LOGIN_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+        run: python main.py
+
+      # ========== 【新增 ④】兜底 push 历史数据 ==========
+      - name: Push history data
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add meter_history.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update: meter history $(date +%Y-%m-%d)"
+          git push
