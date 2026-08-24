@@ -1,0 +1,90 @@
+{
+   "sites": {
+     "ns1886": {
+      "name": "莱佛士",
+       "expected_lag_days": 1,
+      "login_url": "http://www.ns1886.com",
+      "data_url": "http://www.ns1886.com/#/charts/ammeter/electricReport",
+      "features": {
+        "has_captcha": true,
+        "has_menu": false,
+        "has_complex_filter": true
+      },
+      "selectors": {
+        "username_input": "input[placeholder*=\"请输入用户名\"]",
+        "password_input": "input[placeholder*=\"请输入密码\"]",
+        "captcha_img": "#app > div > div.loginBox > div.login_form > form > div:nth-child(3) > div > div > canvas",
+        "captcha_input": "input[placeholder*=\"请输入验证码\"]",
+        "login_btn": "#app > div > div.loginBox > div.login_form > form > div:nth-child(5) > div > button",
+        "close_modal_btn": "body > div:nth-child(7) > div > header > button > i > svg",
+        "menu_level_1": "#app > header > div.adminui-header-left > ul > li:nth-child(6)",
+        "menu_level_2": "#app > section > div.aminui-side > div.adminui-side-scroll > div > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > div > ul > li:nth-child(1) > div",
+        "menu_level_3": "#app > section > div.aminui-side > div.adminui-side-scroll > div > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default > div > ul > li.el-sub-menu.is-opened > ul > li:nth-child(3)",
+
+        "query_btn": "#adminui-main > section > section > header > form > div:nth-child(2) > div:nth-child(2) > div.el-col.el-col-9 > div > div.el-form-item__content > button.el-button.el-button--warning.el-button--default",
+        "download_btn": "#adminui-main > section > section > header > form > div:nth-child(2) > div:nth-child(2) > div.el-col.el-col-9 > div > div.el-form-item__content > button:nth-child(4)",
+        "confirm_download_btn": "#pane-0 > button",
+
+        "filters": [
+          {
+            "trigger": "#adminui-main > section > section > header > form > div.el-row > div:nth-child(3) > div > div.el-form-item__content > div > div > div > div > span > span",
+            "action": "first"
+          },
+          {
+            "trigger": "#adminui-main > section > section > header > form > div:nth-child(2) > div:nth-child(1) > div:nth-child(4) > div > div.el-form-item__content > div > div > div.el-input.el-input--default.el-input--suffix > div > span > span",
+            "action": "last"
+          },
+          {
+            "trigger": "#adminui-main > section > section > header > form > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > div > div.el-form-item__content > div > div > div > div > span > span",
+            "action": "first"
+          }
+        ]
+      },
+      "parser": "parse_ns1886_diff"
+    },
+    "znchaobiao": {
+      "name": "智能抄表网",
+      "expected_lag_days": 0,
+      "login_url": "https://www.znchaobiao.com/admin/public/login",
+      "data_url": "https://www.znchaobiao.com/admin/data_reporter/ele_power",
+      "features": {
+        "has_captcha": true,
+        "has_menu": false,
+        "has_complex_filter": true
+      },
+      "selectors": {
+        "username_input": "#js-admin-name",
+        "password_input": "#admin_pwd",
+        "captcha_img": "body > div.sy-input > form > div > img",
+        "captcha_input": "body > div.sy-input > form > div > input.input-3",
+        "login_btn": "#login_btn_wraper > button",
+
+        "query_btn": "",
+        "download_btn": "#query_excel",
+
+        "filters": [
+          {
+            "trigger": "body > div.wrap.js-check-wrap > form > div:nth-child(8) > label:nth-child(2) > div > ul > li > input",
+            "action": "first",
+            "option_selector": "body > div.wrap.js-check-wrap > form > div:nth-child(8) > label:nth-child(2) > div > div > ul > li"
+          }
+        ]
+      },
+      "parser": "parse_znchaobiao_c_col"
+    }
+  },
+  "accounts": [
+    {
+      "site_id": "ns1886",
+      "username": "用户名",
+      "password": "密码",
+      "project_name": "项目名称"
+    },
+    {
+      "site_id": "znchaobiao",
+      "username": "用户名",
+      "password": "密码",
+      "project_name": "项目名称"
+    }
+  ]
+}
