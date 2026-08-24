@@ -1,0 +1,7 @@
+langgraph
+langchain-openai
+playwright
+ddddocr
+python-dotenv
+requests
+python-calamine
